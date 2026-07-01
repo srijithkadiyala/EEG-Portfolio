@@ -23,17 +23,19 @@ freqs = xf[:half]
 amps = (2.0 / N) * np.abs(yf[:half])
 print(f"FFT complete: {len(freqs)} frequency bins")
 def bandpass(data, low_hz, high_hz):
- nyquist = fs / 2.0
- low = low_hz / nyquist
- high = high_hz / nyquist
- b, a = signal.butter(4, [low, high], btype='bandpass')
- return signal.filtfilt(b, a, data)
+    nyquist = fs / 2.0
+    low = low_hz / nyquist
+    high = high_hz / nyquist
+    b, a = signal.butter(4, [low, high], btype='bandpass')
+    return signal.filtfilt(b, a, data)
 delta_f = bandpass(eeg_raw, 0.5, 4)
 theta_f = bandpass(eeg_raw, 4, 8)
 alpha_f = bandpass(eeg_raw, 8, 13)
 beta_f = bandpass(eeg_raw, 13, 30)
 print("Filters applied:delta, theta, alpha, beta bands extracted")
-fig, axes = plt.subplots(6, 1, figsize=(12, 16))
+f_psd, psd = signal.welch(eeg_raw, fs, nperseg=256)
+print("PSD completed")
+fig, axes = plt.subplots(7, 1, figsize=(12, 20))
 axes[0].plot(t, eeg_raw, color='navy')
 axes[0].set_title('Raw EEG Signal')
 axes[0].set_xlabel('Time (seconds)')
@@ -59,5 +61,12 @@ axes[5].plot(t, beta_f, color='red')
 axes[5].set_title('Beta wave Extracted (13-30 Hz) - Active Thinking')
 axes[5].set_xlabel('Time (seconds)')
 axes[5].set_ylabel('Amplitude (uV)')
+axes[6].plot(f_psd, psd, color='darkred')
+axes[6].set_title('Power Spectral Density (PSD) - Signal Power per Frequency')
+axes[6].set_xlabel('Frequency (Hz)')
+axes[6].set_ylabel('Power (uV2/Hz)')
+axes[6].set_xlim(0, 40)
 plt.tight_layout()
+plt.savefig('eeg_project1.png', dpi=150, bbox_inches='tight')
+print("Graph saved as eeg_project1.png")
 plt.show()
