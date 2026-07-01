@@ -11,3 +11,7 @@ delta = 1.5 * np.sin(2 * np.pi * 2 * t)
 theta = 1.0 * np.sin(2 * np.pi * 6 * t)
 alpha = 2.0 * np.sin(2 * np.pi * 10 * t)
 beta = 0.5 * np.sin(2 * np.pi * 10 * t)
+np.random.seed(42)
+noise = 0.4 * np.random.randn(len(t))
+eeg_raw = delta + theta + alpha + beta + noise
+print(f"Signal created: {len(eeg_raw)} samples, {duration} seconds at {fs} Hz")
