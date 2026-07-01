@@ -1,4 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import signal
-from skipy.fft import fft, fftfreq
+from scipy.fft import fft, fftfreq
+
+print("EEG script is running")
+fs= 256
+duration = 10
+t = np .linspace(0, duration, fs * duration, endpoint=False)
+delta = 1.5 * np.sin(2 * np.pi * 2 * t)
+theta = 1.0 * np.sin(2 * np.pi * 6 * t)
+alpha = 2.0 * np.sin(2 * np.pi * 10 * t)
+beta = 0.5 * np.sin(2 * np.pi * 10 * t)
