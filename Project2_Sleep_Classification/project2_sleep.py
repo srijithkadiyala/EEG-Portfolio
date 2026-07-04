@@ -91,3 +91,10 @@ epochs = Epochs(raw, events, event_id=event_id,
                 preload=True)
 print(f"Ephocs created: {len(epochs)}")
 print(epochs)
+
+X = epochs.get_data()
+y = epochs.events[:, 2]
+
+print(f"X shape: {X.shape}")
+print(f"y shape: {y.shape}")
+print(f"Unique labels: {np.unique(y)}")
