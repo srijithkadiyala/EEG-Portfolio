@@ -31,3 +31,19 @@ plt.tight_layout()
 plt.savefig('normal_vs_seizure.png', dpi=150, bbox_inches='tight')
 plt.show()
 print('plot saved')
+
+def load_set(folder):
+    files = sorted(os.listdir(folder))
+    data = []
+    for f in files:
+        if f.endswith('.txt'):
+            file_path = os.path.join(folder, f)
+            data.append(np.loadtxt(file_path))
+    return np.array(data)
+
+print("Loading all recordings...")
+normal_all = load_set(os.path.join(data_path, "Z"))
+seizure_all = load_set(os.path.join(data_path, "S"))
+
+print(f"Normal set: {normal_all.shape}")
+print(f"Seizure set: {seizure_all.shape}")
