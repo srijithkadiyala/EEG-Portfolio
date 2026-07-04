@@ -79,3 +79,15 @@ plt.xlabel('Time (seconds)')
 plt.ylabel('Amplitude (µV)')
 plt.savefig('real_eeg_sample.png', dpi=150, bbox_inches='tight')
 plt.show()
+from mne import Epochs, events_from_annotations
+print("Creating 30 second ephocs...")
+events, event_id = events_from_annotations(raw)
+print(f"Found events: {event_id}")
+
+epochs = Epochs(raw, events, event_id=event_id,
+                tmin=0, tmax=30,
+                picks='EEG Fpz-Cz',
+                baseline=None,
+                preload=True)
+print(f"Ephocs created: {len(epochs)}")
+print(epochs)
