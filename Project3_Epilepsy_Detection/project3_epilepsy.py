@@ -47,3 +47,12 @@ seizure_all = load_set(os.path.join(data_path, "S"))
 
 print(f"Normal set: {normal_all.shape}")
 print(f"Seizure set: {seizure_all.shape}")
+
+normal_labels = np.zeros(100)
+seizure_labels = np.ones(100)
+
+X = np.vstack((normal_all, seizure_all))
+y = np.concatenate((normal_labels, seizure_labels))
+
+print(f"Dataset ready: {X.shape[0]}recordings, {X.shape[1]} features each")
+print(f"Labels: {int(sum(y==0))} normal, {int(sum(y==1))} seizure")
