@@ -72,3 +72,40 @@ print(f"Training samples: {len(X_train)}")
 print(f"Testing samples: {len(X_test)}")
 print(f"accuracy: {accuracy * 100:.1f}%")
 print(classification_report(y_test, y_pred, target_names=['Normal', 'Seizure']))
+
+import matplotlib.pyplot as plt
+
+feature_importance = clf.feature_importances_
+plt.figure(figsize=(12, 4))
+plt.plot(feature_importance, color='darkred')
+plt.title('Feature Importance - Seizure detection')
+plt.xlabel('Time point')
+plt.ylabel('Importane')
+plt.savefig('feature_importance.png', dpi=150, bbox_inches='tight')
+plt.show()
+print("Feature Importance plot saved")
+
+top_feature =np.argmax(feature_importance)
+print(f"Most mportant time point: sample{top_feature}")
+print(f"That is {top_feature/173.6:.2f} seconds into recording")
+
+fig, axes = plt.subplots(2, 1, figsize=(12,6))
+
+axes[0].plot(t, normal, color='blue')
+axes[0].axvline(x=7.24, color='red', linestyle='--', linewidth=2, label='Key moment')
+axes[0].set_title('Normal brain activity - Key moment at 7.24 sec')
+axes[0].set_xlabel('Time(seconds)')
+axes[0].set_ylabel('Amplitude(Uv)')
+axes[0].legend()
+
+axes[1].plot(t, seizure, color='red')
+axes[1].axvline(x=7.24, color='black', linestyle='--', linewidth=2, label='KEy moment')
+axes[1].set_title('Seizure brain activity - Key moment at 7.24 sec')
+axes[1].set_xlabel('Time(seconds)')
+axes[1].set_ylabel('Amplitude(Uv)')
+axes[1].legend()
+
+plt.tight_layout()
+plt.savefig('normal_vs_seizure_annotated.png', dpi=150, bbox_inches='tight')
+plt.show()
+print("Annotated plot saved")
