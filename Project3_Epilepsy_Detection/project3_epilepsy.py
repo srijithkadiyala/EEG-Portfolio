@@ -56,3 +56,19 @@ y = np.concatenate((normal_labels, seizure_labels))
 
 print(f"Dataset ready: {X.shape[0]}recordings, {X.shape[1]} features each")
 print(f"Labels: {int(sum(y==0))} normal, {int(sum(y==1))} seizure")
+
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report
+
+X_train, X_test,y_train,  y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+clf = RandomForestClassifier(n_estimators=100, random_state=42)
+clf.fit (X_train, y_train)
+
+y_pred = clf.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+
+print(f"Training samples: {len(X_train)}")
+print(f"Testing samples: {len(X_test)}")
+print(f"accuracy: {accuracy * 100:.1f}%")
+print(classification_report(y_test, y_pred, target_names=['Normal', 'Seizure']))
