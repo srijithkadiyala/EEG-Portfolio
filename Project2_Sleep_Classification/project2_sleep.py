@@ -152,3 +152,16 @@ accuracy2 = accuracy_score(y_test2, y_pred2)
 
 print(f"Raw signal accuracy: 41.9%")
 print(f"Feature-based accuracy: {accuracy2* 100:.1f}%")
+
+feature_names = ['Delta', 'Theta', 'Alpha', 'Beta', 'Activity', 'Mobility', 'Complexity']
+
+importance = clf2.feature_importances_
+
+plt.figure(figsize=(10, 5))
+plt.bar(feature_names, importance, color='steelblue')
+plt.title('Feature Importance for Sleep Stage Classification')
+plt.xlabel('Feature')
+plt.ylabel('Importance')
+plt.savefig('sleep_feature_importance.png', dpi=150, bbox_inches='tight')
+plt.show()
+print("Project 2 complete")
