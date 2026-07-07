@@ -57,3 +57,13 @@ seizure_entropy = ant.sample_entropy(seizure)
 
 print(f"Normal entropy: {normal_entropy:.4f}")
 print(f"Seizure entroopy: {seizure_entropy:.4f}")
+
+def wavelet_energy (data, wavelet='db4' , level=4):
+    coeffs = pywt.wavedec(data, wavelet, level=level)
+    energies = [np.sum(c**2) for c in coeffs]
+    return energies
+normal_wav = wavelet_energy(normal)
+seizure_wav = wavelet_energy(seizure)
+
+print (f"Normal wavelet energies: {[f'{e:.1f}' for e in normal_wav]}")
+print (f"Seizure wavelet energies: {[f'{e:.1f}' for e in seizure_wav]}")
