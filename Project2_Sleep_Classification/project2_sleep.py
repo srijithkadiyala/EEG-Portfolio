@@ -1,6 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import mne
+from scipy import signal
+from mne import Epochs, events_from_annotations
+
 raw = mne.io.read_raw_edf('SC4001E0-PSG.edf', preload=True)
 print(raw.info)
 annotations = mne.read_annotations('SC4001EC-Hypnogram.edf')
@@ -116,3 +119,36 @@ accuracy = accuracy_score(y_test, y_pred)
 print(f"Training samples: {len(X_train)}")
 print(f"Testing samples: {len(X_test)}")
 print(f"Accuracy: {accuracy* 100:.1f}%")
+
+def bandpower(data, fs, low, high):
+    f, psd = signal.welch(data, fs, nperseg=256)
+    mask = (f >= low) & (f <= high)
+    return np.trapezoid (psd[mask], f[mask])
+
+def hjorth(data):
+    activity= np.var(data)
+    mobility = np.sqrt(np.var(np.diff(data)) / np.var(data))
+    complexity = np.sqrt(np.var(np.diff(np.diff(data))) / np.var(np.diff(data))) / mobility
+    return activity, mobility, complexity
+
+def extract_features(epoch, fs):
+    delta = bandpower(epoch, fs, 0.5, 4)
+    theta = bandpower(epoch, fs, 4, 8)
+    alpha = bandpower(epoch, fs, 8, 13)
+    beta = bandpower(epoch, fs, 13, 30)
+    act, mob, com = hjorth(epoch)
+    return [delta, theta, alpha, beta, act, mob, com]
+
+print("Extracting features from all epochs...")
+X_features = np.array([extract_features(X[i], 100) for i in range(len(X))])
+print(f"Feature matrix shape: {X_features.shape}")
+
+X_train2, X_test2, y_train2, y_test2 = train_test_split(X_features, y, test_size=0.2, random_state=42)
+clf2 = RandomForestClassifier(n_estimators=100, random_state=42)
+clf2.fit(X_train2, y_train2)
+
+y_pred2 = clf2.predict(X_test2)
+accuracy2 = accuracy_score(y_test2, y_pred2)
+
+print(f"Raw signal accuracy: 41.9%")
+print(f"Feature-based accuracy: {accuracy2* 100:.1f}%")
