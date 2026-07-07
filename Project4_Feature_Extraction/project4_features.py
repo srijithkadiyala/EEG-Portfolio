@@ -67,3 +67,24 @@ seizure_wav = wavelet_energy(seizure)
 
 print (f"Normal wavelet energies: {[f'{e:.1f}' for e in normal_wav]}")
 print (f"Seizure wavelet energies: {[f'{e:.1f}' for e in seizure_wav]}")
+
+def load_set(folder):
+    files = sorted([f for f in os.listdir(folder) if f.endswith('.txt')])
+    return np.array([np.loadtxt(os.path.join(folder, f)) for f in files])
+
+def extract_features(data):
+    delta = bandpower (data, fs, 0.5, 4)
+    alpha = bandpower(data, fs, 8, 13)
+    beta = bandpower(data, fs, 13, 30)
+    act, mob, com = hjorth(data)
+    ent = ant.sample_entropy(data)
+    wav = wavelet_energy(data)
+    return [delta, alpha, beta, act, mob, com, ent] + wav
+
+data_path = "/Users/sri/Projects/EEG-Signal-Filtering/EEG signal filtering/Project3_Epilepsy_Detection/Bonn University Dataset"
+print("loading all 200 recordings...")
+normal_all = load_set(os.path.join(data_path, "Z"))
+seizure_all = load_set(os.path.join(data_path, "S"))
+
+print(f"Normal set loaded: {normal_all.shape}")
+print(f"Seizure set loaded: {seizure_all.shape}")
