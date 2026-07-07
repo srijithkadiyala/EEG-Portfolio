@@ -39,3 +39,15 @@ seizure_beta = bandpower(seizure, fs, 13, 30)
 
 print(f"Normal  - Delta: {normal_delta:.2f} | Alpha: {normal_alpha:.2f} | Beta: {normal_beta:.2f}")
 print(f"Seizure - Delta: {seizure_delta:.2f} | Alpha: {seizure_alpha:.2f} | Beta: {seizure_beta:.2f}")
+
+def hjorth(data):
+    activity = np.var(data)
+    mobility = np.sqrt(np.var(np.diff(data)) / np.var(data))
+    complexity = np.sqrt(np.var(np.diff(np.diff(data))) / np.var(np.diff(data))) / mobility
+    return activity , mobility, complexity
+
+n_act, n_mob, n_com = hjorth(normal)
+s_act, s_mob, s_com = hjorth(seizure)
+
+print (f"Normal - Activity: {n_act:.2f} | Mobility: {n_mob:.2f} | Complexity: {n_com:.2f}")
+print (f"Seizure - Activity: {s_act:.2f} | Mobility: {s_mob:.2f} | Complexity: {s_com:.2f}")
