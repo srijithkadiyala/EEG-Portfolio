@@ -109,3 +109,19 @@ plt.tight_layout()
 plt.savefig('normal_vs_seizure_annotated.png', dpi=150, bbox_inches='tight')
 plt.show()
 print("Annotated plot saved")
+
+from sklearn.svm import SVC
+from sklearn.preprocessing import StandardScaler
+
+scalar = StandardScaler()
+X_train_scaled = scalar.fit_transform(X_train)
+X_test_scaled = scalar.transform(X_test)
+
+svm = SVC(kernel='rbf', random_state=42)
+svm.fit(X_train_scaled, y_train)
+
+y_pred_svm = svm.predict(X_test_scaled)
+accuracy_svm = accuracy_score(y_test, y_pred_svm)
+
+print(f"Random Forest ccuracy = 97.5%")
+print(f"SVM accuracy :{accuracy_svm * 100:.1f}%")
