@@ -51,3 +51,9 @@ s_act, s_mob, s_com = hjorth(seizure)
 
 print (f"Normal - Activity: {n_act:.2f} | Mobility: {n_mob:.2f} | Complexity: {n_com:.2f}")
 print (f"Seizure - Activity: {s_act:.2f} | Mobility: {s_mob:.2f} | Complexity: {s_com:.2f}")
+
+normal_entropy = ant.sample_entropy(normal)
+seizure_entropy = ant.sample_entropy(seizure)
+
+print(f"Normal entropy: {normal_entropy:.4f}")
+print(f"Seizure entroopy: {seizure_entropy:.4f}")
