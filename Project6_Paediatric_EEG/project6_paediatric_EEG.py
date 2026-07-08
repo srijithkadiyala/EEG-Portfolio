@@ -47,3 +47,36 @@ plt.tight_layout()
 plt.savefig('paediatric_seizure_comparision.png', dpi=150, bbox_inches='tight')
 plt.show()
 print("Plot saved")
+def bandpass (data, low, high, fs):
+    nyq = fs / 2.0
+    b, a = signal.butter(4, [low/nyq, high/nyq], btype='bandpass')
+    return signal.filtfilt(b, a, data)
+
+pre_delta = bandpass(data_pre, 0.5, 4, fs)
+seiz_delta = bandpass(data_seiz, 0.5, 4, fs)
+pre_beta = bandpass(data_pre, 13, 30, fs)
+seiz_beta = bandpass(data_seiz, 13, 30, fs)
+
+fig, axes = plt.subplots(2, 2, figsize=(14, 8))
+
+axes[0,0].plot(t_pre, pre_delta * 1e6, color='blue')
+axes[0,0].set_title('Pre-seizure Delta (0.5-4 Hz)')
+axes[0,0].set_ylabel('Amplitude (Uv)')
+
+axes[0,1].plot(t_seiz, seiz_delta * 1e6, color='red')
+axes[0,1].set_title('Seizure_delta (0.5-4 Hz)')
+
+axes[1,0].plot(t_pre, pre_beta * 1e6, color='blue')
+axes[1,0].set_title('Pre-seizure Beta (13-30 Hz)')
+axes[1,0].set_ylabel('Amplitude(Uv)')
+axes[1,0].set_xlabel('Time (seconds)')
+
+axes[1,1].plot(t_seiz, seiz_beta * 1e6, color='red')
+axes[1,1].set_title('Seizure Beta (13-30 Hz)')
+axes[1,1].set_xlabel('Time (seconds)')
+
+plt.suptitle('Paediatric EEG - Brain Wave changes during seizure', fontsize=14)
+plt.tight_layout()
+plt.savefig('paediatric_brain_wave.png', dpi=150, bbox_inches='tight')
+plt.show()
+print("project6 complete")
