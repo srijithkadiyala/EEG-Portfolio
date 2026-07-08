@@ -88,3 +88,43 @@ seizure_all = load_set(os.path.join(data_path, "S"))
 
 print(f"Normal set loaded: {normal_all.shape}")
 print(f"Seizure set loaded: {seizure_all.shape}")
+
+print("Extracting features...")
+X = np.array([extract_features(r) for r in normal_all] +
+            [extract_features(r) for r in seizure_all])
+y = np.array([0]*100 + [1]*100)
+
+print(f"Feature matrix shape: {X.shape}")
+print(f"Labells: {sum(y==0)} normal, {sum(y==1)} seizure")
+
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+clf = RandomForestClassifier(n_estimators=100, random_state=42)
+clf.fit(X_train, y_train)
+
+y_pred= clf.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+
+print(f"Training samples: {len(X_train)}")
+print(f"Testing samples: {len(X_test)}")
+print(f"Accuracy with 12 features: {accuracy * 100:.1f}%")
+print(classification_report(y_test, y_pred, target_names=['Normal', 'Seizure']))
+
+feature_names = ['Delta', 'Alpha', 'Beta', 
+                 'Activity', 'Mobility', 'Complexity', 'Entropy',
+                 'Wav1', 'Wav2', 'Wav3', 'Wav4', 'Wav5']
+
+importance = clf.feature_importances_
+
+plt.figure(figsize=(12, 5))
+plt.bar(feature_names, importance, color='darkred')
+plt.title('Feature Importance for Epilepsy Detection')
+plt.xlabel('Feature')
+plt.ylabel('Importance')
+plt.savefig('epilepsy_feature_importance.png', dpi=150, bbox_inches='tight')
+plt.show()
+print("Project 4 complete")
